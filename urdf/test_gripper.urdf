@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot name="test_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="height" value="1.0"/>
+  <xacro:property name="offset" value="0.04"/>
+  <xacro:property name="length" value="0.1"/>
+
+  <link name="world"/>
+
+  <joint name="gripper_joint" type="revolute">
+    <axis xyz="1 0 0" />
+    <origin xyz="0 0 ${height+offset}" rpy="${pi} 0 0"/>
+    <parent link="world"/>
+    <child link="vacuum_gripper"/>
+    <limit effort="30" velocity="1.0" lower="0" upper="0"/>
+    <dynamics damping="0.0"/>
+  </joint>
+
+  <link name="vacuum_gripper">
+    <gravity>0</gravity>
+    <visual>
+      <origin xyz="0 0 -${length/2}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="${length}"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="0.0001"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-08" ixy="0" ixz="0" iyy="1e-08" iyz="0" izz="1e-08"/>
+    </inertial>
+  </link>
+
+  <gazebo>
+    <plugin name="gazebo_ros_vacuum_gripper_debugger" filename="libgazebo_ros_vacuum_gripper_debugger.so">
+      <robotNamespace>/vacuum_gripper</robotNamespace>
+      <bodyName>vacuum_gripper</bodyName>
+      <topicName>grasping</topicName>
+      <maxForce>50</maxForce>
+      <maxDistance>0.5</maxDistance>
+      <minDistance>0.01</minDistance>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="vacuum_gripper">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+</robot>

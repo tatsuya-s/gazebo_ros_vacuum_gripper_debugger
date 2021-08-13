@@ -1,0 +1,7 @@
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find gazebo_ros_vacuum_gripper_debugger)/worlds/box.world"/>
+  </include>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find gazebo_ros_vacuum_gripper_debugger)/urdf/test_gripper.urdf'"/>
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model test_gripper -param robot_description"/>
+</launch>
